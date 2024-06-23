@@ -94,12 +94,11 @@ fn metadata_derive_macro2(
             fn field_authors(&self) -> std::collections::HashMap<&'static str, &'static str> {
                 static FIELDS: [&str; #field_names_len] = [#(#field_names),*];
                 static AUTHORS: [&str; #field_authors_len] = [#(#field_authors),*];
-                let map = FIELDS
+                FIELDS
                     .into_iter()
                     .zip(AUTHORS.iter())
                     .map(|(field, author)| (field, *author))
-                    .collect();
-                map
+                    .collect()
             }
         }
     })
