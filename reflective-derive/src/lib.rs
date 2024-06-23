@@ -91,11 +91,10 @@ fn metadata_derive_macro2(
             fn serial_version(&self) -> usize {
                 #serial_version
             }
-            // Always use fully qualified types for external dependencies so that users do not have errors from unexpected dependencies.
             fn field_authors(&self) -> std::collections::HashMap<&'static str, &'static str> {
                 static FIELDS: [&str; #field_names_len] = [#(#field_names),*];
                 static AUTHORS: [&str; #field_authors_len] = [#(#field_authors),*];
-                let map: std::collections::HashMap<&'static str, &'static str> = FIELDS
+                let map = FIELDS
                     .into_iter()
                     .zip(AUTHORS.iter())
                     .map(|(field, author)| (field, *author))
