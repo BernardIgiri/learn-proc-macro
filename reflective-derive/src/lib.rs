@@ -92,14 +92,14 @@ fn metadata_derive_macro2(
                 #serial_version
             }
             // Always use fully qualified types for external dependencies so that users do not have errors from unexpected dependencies.
-            fn field_authors(&self) -> std::collections::HashMap<String, String> {
+            fn field_authors(&self) -> std::collections::HashMap<&'static str, &'static str> {
                 // We use arrays to avoid heap allocation on macro expansion
                 static FIELDS: [&str; #field_names_len] = [#(#field_names),*];
                 static AUTHORS: [&str; #field_authors_len] = [#(#field_authors),*];
-                let map: std::collections::HashMap<String, String> = FIELDS
+                let map: std::collections::HashMap<&'static str, &'static str> = FIELDS
                     .into_iter()
                     .zip(AUTHORS.iter())
-                    .map(|(field, author)| (String::from(field), String::from(*author)))
+                    .map(|(field, author)| (field, *author))
                     .collect();
                 map
             }

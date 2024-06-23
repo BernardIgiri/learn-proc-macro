@@ -10,5 +10,5 @@ pub trait Reflective {
 pub trait MetaData {
 	fn author(&self) -> &'static str;
     fn serial_version(&self) -> usize;
-    fn field_authors(&self) -> HashMap<String, String>;
+    fn field_authors(&self) -> HashMap<&'static str, &'static str>;
 }
