@@ -4,9 +4,9 @@ use learn_proc_macro::{MetaData, Reflective};
 #[metadata(author = "Eray Edin", serial_version = 4)]
 #[derive(Reflective)]
 struct Rectangle {
-    #[metadata(author = "Brandon Fraisure")]
+    #[metadata(author = "Anthony Hopkins")]
     height: i32,
-    #[metadata(author = "Brian Fox")]
+    #[metadata(author = "Julius Ceasar")]
     width: i32,
 }
 

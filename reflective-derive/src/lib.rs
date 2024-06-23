@@ -1,4 +1,4 @@
-use std::{collections::HashMap, default};
+use std::collections::HashMap;
 
 use syn::{DeriveInput, Ident};
 
@@ -71,8 +71,14 @@ fn metadata_derive_macro2(
         extract_metadata_field_attrs(&mut ast)?;
     let (field_names, field_authors): (Vec<String>, Vec<String>) = field_attrs
         .into_iter()
-        .map(|(field, attrs)| (field, *attrs.author))
+        .map(|(field, attrs)| {
+            let field: String = field;
+            let attrs: String = attrs.author;
+            (field, attrs)
+        })
         .unzip();
+    let field_names_len = field_names.len();
+    let field_authors_len = field_authors.len();
     let ident = &ast.ident;
     let (impl_generics, type_generics, where_clause) = ast.generics.split_for_impl();
     Ok(quote::quote! {
@@ -84,15 +90,15 @@ fn metadata_derive_macro2(
                 #serial_version
             }
             // Always use fully qualified types for external dependencies so that users do not have errors from unexpected dependencies.
-            fn field_authors(&self) -> std::collections::HashMap<&'static str,  &'static str> {
+            fn field_authors(&self) -> std::collections::HashMap<String, String> {
                 // We use arrays to avoid heap allocation on macro expansion
-                let fields = [#(#field_names),*];
-                let authors = [#(#field_authors),*];
-                let map:std::collections::HashMap<&'static str,  &'static str> =
-                    fields.into_iter()
-                        .zip(authors.iter())
-                        .map(|(&field, &author)| (field, author))
-                        .collect();
+                static FIELDS: [&str; #field_names_len] = [#(#field_names),*];
+                static AUTHORS: [&str; #field_authors_len] = [#(#field_authors),*];
+                let map: std::collections::HashMap<String, String> = FIELDS
+                    .into_iter()
+                    .zip(AUTHORS.iter())
+                    .map(|(field, author)| (String::from(field), String::from(*author)))
+                    .collect();
                 map
             }
         }
